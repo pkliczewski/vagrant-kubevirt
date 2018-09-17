@@ -1,0 +1,9 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.provider :kubevirt do |kubevirt|
+    kubevirt.hostname = '192.168.121.121'
+    kubevirt.port = '8443'
+    kubevirt.token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3N'
+  end
+end
