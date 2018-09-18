@@ -19,6 +19,7 @@ module VagrantPlugins
               next
             end
 
+            b2.use SetDomainName
             b2.use CreateVM
             b2.use StartVM
             b2.use Call, WaitForState, :running, 120 do |env2, b3|
@@ -77,6 +78,7 @@ module VagrantPlugins
       autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :ReadState, action_root.join("read_state")
       autoload :ReadSSHInfo, action_root.join("read_ssh_info")
+      autoload :SetDomainName, action_root.join("set_domain_name")
       autoload :StartVM, action_root.join("start_vm")
       autoload :StopVM, action_root.join("stop_vm")
       autoload :WaitForState, action_root.join("wait_for_state")

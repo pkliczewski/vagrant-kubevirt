@@ -1,0 +1,8 @@
+en:
+  vagrant_kubevirt:
+    already_status: |-
+      The machine is already %{status}.
+    error_recovering: |-
+      An error occured. Recovering..
+    starting_vm: |-
+      Starting VM.
