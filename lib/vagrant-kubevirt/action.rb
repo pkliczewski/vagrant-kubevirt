@@ -15,7 +15,8 @@ module VagrantPlugins
           b.use ConnectKubevirt
           b.use Call, IsCreated do |env1, b1|
             if env[:result]
-              b2.use MessageAlreadyCreated
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.already_status", :status => "created")
               next
             end
 
@@ -24,7 +25,8 @@ module VagrantPlugins
             b2.use StartVM
             b2.use Call, WaitForState, :running, 120 do |env2, b3|
               if !env2[:result]
-                # TODO message stop failed
+                b2.use Message,
+                  I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
               end
             end
           end
@@ -37,12 +39,19 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
             if !env[:result]
-              b2.use MessageNotCreated
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.not_created")
               next
             end
 
             b2.use ConnectKubevirt
             b2.use StopVM
+            b2.use Call, WaitForState, :stopped, 120 do |env2, b3|
+              if !env2[:result]
+                b2.use Message,
+                  I18n.t("vagrant_kubevirt.action_failed", :action => 'Halt')
+              end
+            end
           end
         end
       end
@@ -53,17 +62,13 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
             if !env[:result]
-              b2.use MessageNotCreated
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.not_created")
               next
             end
 
             b2.use ConnectKubevirt
             b2.use DestroyVM
-            b2.use Call, WaitForState, :stopped, 120 do |env2, b3|
-              if !env2[:result]
-                # TODO message stop failed
-              end
-            end
           end
         end
       end
@@ -74,8 +79,6 @@ module VagrantPlugins
       autoload :CreateVM, action_root.join("create_vm")
       autoload :DestroyVM, action_root.join("destroy_vm")
       autoload :IsCreated, action_root.join("is_created")
-      autoload :MessageAlreadyCreated, action_root.join("message_already_created")
-      autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :ReadState, action_root.join("read_state")
       autoload :ReadSSHInfo, action_root.join("read_ssh_info")
       autoload :SetDomainName, action_root.join("set_domain_name")

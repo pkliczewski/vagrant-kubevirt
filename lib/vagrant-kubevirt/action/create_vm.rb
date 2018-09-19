@@ -44,7 +44,7 @@ module VagrantPlugins
           end
 
           vm = kubevirt.vms.get(vm_name)
-          env[:machine].id = vm.uid
+          env[:machine].id = vm.name
 
           # Terminate the instance if we were interrupted
           terminate(env) if env[:interrupted]

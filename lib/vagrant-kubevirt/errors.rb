@@ -14,6 +14,14 @@ module VagrantPlugins
       class NoVMError < VagrantKubevirtError
         error_key(:no_vm_error)
       end
+
+      class StartVMError < VagrantKubevirtError
+        error_key(:start_vm_error)
+      end
+
+      class StopVMError < VagrantKubevirtError
+        error_key(:start_vm_error)
+      end
     end
   end
 end

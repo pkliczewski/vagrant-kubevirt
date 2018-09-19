@@ -5,4 +5,14 @@ en:
     error_recovering: |-
       An error occured. Recovering..
     starting_vm: |-
-      Starting VM.
+      Starting the VM...
+    wait_for_state: |-
+      Waiting for machine to reach state %{state}
+    not_created: |-
+      Virtual machine is not created. Please run `vagrant up` first.
+    action_failed: |-
+      %{action} failed.
+    stopping: |-
+      Stopping the VM...
+    destroy_vm: |-
+      Removing the VM...
