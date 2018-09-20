@@ -1,13 +1,13 @@
 en:
   vagrant_kubevirt:
     already_status: |-
-      The machine is already %{status}.
+      The VM is already %{status}.
     error_recovering: |-
       An error occured. Recovering..
     starting_vm: |-
       Starting the VM...
     wait_for_state: |-
-      Waiting for machine to reach state %{state}
+      Waiting for VM to reach state %{state}
     not_created: |-
       Virtual machine is not created. Please run `vagrant up` first.
     action_failed: |-
@@ -16,3 +16,5 @@ en:
       Stopping the VM...
     destroy_vm: |-
       Removing the VM...
+    vm_not_found: |-
+      VM not found or terminated, assuming it got destroyed.
