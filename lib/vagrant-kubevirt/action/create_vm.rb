@@ -73,7 +73,11 @@ module VagrantPlugins
         end
 
         def provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
-        	# TODO missing implementation in fog-kubevirt
+        	begin
+        	  kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc)
+        	rescue Fog::Errors::Error => e
+        	  raise Errors::FogError, :message => e.message
+        	end
         end
 
         def terminate(env)
