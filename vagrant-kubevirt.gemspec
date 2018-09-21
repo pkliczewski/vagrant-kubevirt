@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- spec/*`.split("\n")
   gem.name          = "vagrant-kubevirt"
   gem.require_paths = ["lib"]
-  gem.version       = VagrantPlugins::KubevirtProvider::VERSION
+  gem.version       = VagrantPlugins::Kubevirt::VERSION
 
   gem.add_runtime_dependency "fog-kubevirt", "~> 0.1.6"
 

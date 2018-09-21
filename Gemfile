@@ -8,7 +8,3 @@ group :development do
   # Vagrant environment itself using `vagrant plugin`.
   gem "vagrant", :git => "https://github.com/hashicorp/vagrant.git"
 end
-
-group :plugins do
-  gem "vagrant-kubevirt" , path: "."
-end
