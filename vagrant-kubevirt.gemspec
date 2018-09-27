@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.version       = VagrantPlugins::Kubevirt::VERSION
 
   gem.add_runtime_dependency "fog-kubevirt", "~> 0.1.6"
+  gem.add_runtime_dependency "iniparse", "~> 1.4", ">= 1.4.2"
 
   gem.add_development_dependency "rspec", "~> 3.4"
   gem.add_development_dependency "rake"

@@ -12,10 +12,12 @@ module VagrantPlugins
         def call(env)
           # Destroy the server, remove the tracking ID
           env[:ui].info(I18n.t("vagrant_kubevirt.destroy_vm"))
+          kubevirt = env[:kubevirt_compute]
 
-          vm = env[:kubevirt_compute].vms.get(env[:machine].id.to_s)
+          vm = kubevirt.vminstances.get(env[:machine].id.to_s)
           if vm != nil
-            env[:kubevirt_compute].delete_vm_instance(vm.name)
+            config = env[:machine].provider_config
+            kubevirt.vminstances.destroy(vm.name, config.namespace)
           end
           env[:machine].id = nil
 

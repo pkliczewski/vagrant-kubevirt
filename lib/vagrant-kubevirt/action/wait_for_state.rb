@@ -25,19 +25,19 @@ module VagrantPlugins
           watch = kubevirt.watch_vms
 
           vm = kubevirt.vms.get(vm_name)
-          # TODO add status field to fog vm model 
+
           if vm.status == @state
             @logger.info(I18n.t("vagrant_kubevirt.already_status", :status => @state))
           else
-            @logger.info(I18n.t("vagrant_kubevirt.wait_for_state", :status => @state))
+            @logger.info(I18n.t("vagrant_kubevirt.wait_for_state", :state => @state))
             begin
               Timeout.timeout(@timeout) do
                 watch.each do |notice|
-                  break if notice.kind == 'VirtualMachine' && notice.name == vm_name && notice.status == @state
+                  break if notice.kind == 'VirtualMachine' && notice.name == vm_name && notice.status == @state.to_s
                 end
               end
             rescue Timeout::Error
-              env[:result] = false # couldn't reach state in time
+              raise Errors::VMReadyTimeout, timeout: @timeout
             end
           end
           watch.finish

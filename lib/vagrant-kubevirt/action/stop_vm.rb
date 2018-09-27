@@ -13,10 +13,10 @@ module VagrantPlugins
 
         def call(env)
           begin
+            kubevirt = env[:kubevirt_compute]
             vm = kubevirt.vms.get(env[:machine].id.to_s)
             if vm == nil
-              raise Errors::NoVMError,
-                :vm_name => env[:domain_name]
+              raise Errors::NoVMError, :vm_name => env[:domain_name]
             end
 
             if vm.status == :stopped

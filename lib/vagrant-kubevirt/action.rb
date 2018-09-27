@@ -14,16 +14,16 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use ConnectKubevirt
           b.use Call, IsCreated do |env1, b1|
-            if env[:result]
-              b2.use Message,
+            if env1[:result]
+              b1.use Message,
                 I18n.t("vagrant_kubevirt.already_status", :status => "created")
               next
             end
 
-            b2.use SetDomainName
-            b2.use CreateVM
-            b2.use StartVM
-            b2.use Call, WaitForState, :running, 120 do |env2, b3|
+            b1.use SetDomainName
+            b1.use CreateVM
+            b1.use StartVM
+            b1.use Call, WaitForState, :running, 120 do |env2, b2|
               if !env2[:result]
                 b2.use Message,
                   I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
@@ -70,6 +70,17 @@ module VagrantPlugins
             b2.use ConnectKubevirt
             b2.use DestroyVM
           end
+        end
+      end
+
+      # This action is called to read the state of the machine. The
+      # resulting state is expected to be put into the `:machine_state_id`
+      # key.
+      def self.action_read_state
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ConfigValidate
+          b.use ConnectKubevirt
+          b.use ReadState
         end
       end
 

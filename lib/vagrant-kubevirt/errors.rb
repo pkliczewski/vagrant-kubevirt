@@ -11,6 +11,10 @@ module VagrantPlugins
         error_key(:fog_error)
       end
 
+      class DomainNameExists < VagrantKubevirtError
+      	error_key(:vm_exists)
+      end
+
       class NoVMError < VagrantKubevirtError
         error_key(:no_vm_error)
       end
@@ -20,7 +24,11 @@ module VagrantPlugins
       end
 
       class StopVMError < VagrantKubevirtError
-        error_key(:start_vm_error)
+        error_key(:stop_vm_error)
+      end
+
+      class VMReadyTimeout < VagrantKubevirtError
+        error_key(:vm_ready_timeout)
       end
     end
   end

@@ -10,17 +10,24 @@ module VagrantPlugins
       attr_accessor :port
       attr_accessor :namespace
 
+      # Domain specific settings used while creating new machine.
+      attr_accessor :memory
+      attr_accessor :cpus
+      attr_accessor :template
+      attr_accessor :image
+      attr_accessor :pvc
+
       def initialize
       	@token     = UNSET_VALUE
         @hostname  = UNSET_VALUE
         @port      = UNSET_VALUE
         @namespace = UNSET_VALUE
-      end
 
-      def merge(other)
-        super.tap do |result|
-          # TODO check whether it is needed
-        end
+        @memory   = UNSET_VALUE
+        @cpus     = UNSET_VALUE
+        @template = UNSET_VALUE
+        @image    = UNSET_VALUE
+        @pvc      = UNSET_VALUE
       end
 
       def finalize!
@@ -28,6 +35,12 @@ module VagrantPlugins
       	@hostname = 'localhost' if @hostname == UNSET_VALUE
       	@port = '8443' if @port == UNSET_VALUE
       	@namespace = 'default' if @namespace == UNSET_VALUE
+
+        @memory = 512 if @memory == UNSET_VALUE
+        @cpus = 1 if @cpus == UNSET_VALUE
+        @template = nil if @template == UNSET_VALUE
+        @image = nil if @image == UNSET_VALUE
+        @pvc = nil if @pvc == UNSET_VALUE
       end
 
       def validate(machine)

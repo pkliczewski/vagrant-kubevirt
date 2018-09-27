@@ -1,4 +1,3 @@
-require "fog"
 require 'fog/kubevirt'
 
 require "log4r"

@@ -18,3 +18,31 @@ en:
       Removing the VM...
     vm_not_found: |-
       VM not found or terminated, assuming it got destroyed.
+
+    states:
+      short_not_created: |-
+        not created
+      long_not_created: |-
+        The virtual machine is not created. Run `vagrant up` to create it.
+      short_running: |-
+        running
+      long_running: |-
+        The oVirt domain is running. To stop this machine, you can run
+        `vagrant halt`. To destroy the machine, you can run `vagrant destroy`.
+    errors:
+      fog_error: |-
+        There was an error talking to Kubevirt. The error message is shown
+        below:
+
+        %{message}
+      no_vm_error: |-
+        No VM %{vm_name} found.
+      start_vm_error: |-
+        Unable to start VM: %{message}
+      stop_vm_error: |-
+        Unable to stop VM: %{message}
+      vm_exists: |-
+        The VM is already created
+      vm_ready_timeout: |-
+        The VM never became "ready" in AWS. The timeout currently
+        set waiting for the vm to become ready is %{timeout} seconds.

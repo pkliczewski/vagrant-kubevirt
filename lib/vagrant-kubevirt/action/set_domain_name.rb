@@ -10,15 +10,22 @@ module VagrantPlugins
 
         def call(env)
           env[:domain_name] = env[:root_path].basename.to_s.dup
-          env[:domain_name].gsub!(/[^-a-z0-9_]/i, "")
-          env[:domain_name] << "_#{Time.now.to_i}"
+          env[:domain_name].gsub!(/([_.])/, '-')
 
           # Check if the domain name is not already taken
           kubevirt = env[:kubevirt_compute]
-          domain = kubevirt.vms.get(env[:domain_name])
-          if domain != nil
-            raise Vagrant::Errors::DomainNameExists,
-              :domain_name => env[:domain_name]
+          begin
+            domain = kubevirt.vms.get(env[:domain_name])
+
+            unless domain.nil?
+              raise Errors::DomainNameExists, :domain_name => env[:domain_name]
+            end
+          rescue Fog::Kubevirt::Errors::ClientError => e
+            msg = e.message
+
+            unless msg.include? '404'
+              raise Errors::FogError, :message => msg
+            end
           end
 
           @app.call(env)
