@@ -11,10 +11,6 @@ module VagrantPlugins
         error_key(:fog_error)
       end
 
-      class DomainNameExists < VagrantKubevirtError
-      	error_key(:vm_exists)
-      end
-
       class NoVMError < VagrantKubevirtError
         error_key(:no_vm_error)
       end

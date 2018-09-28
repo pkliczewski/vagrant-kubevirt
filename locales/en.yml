@@ -17,7 +17,9 @@ en:
     destroy_vm: |-
       Removing the VM...
     vm_not_found: |-
-      VM not found or terminated, assuming it got destroyed.
+      The VM not found or terminated, assuming it got destroyed.
+    vm_exists: |-
+      The VM is already created
 
     states:
       short_not_created: |-
@@ -27,8 +29,12 @@ en:
       short_running: |-
         running
       long_running: |-
-        The oVirt domain is running. To stop this machine, you can run
+        The virtual machine is running. To stop this machine, you can run
         `vagrant halt`. To destroy the machine, you can run `vagrant destroy`.
+      short_stopped: |-
+        stopped
+      long_stopped: |-
+        The virtual machine is stopped. Run `vagrant up` to start it.
     errors:
       fog_error: |-
         There was an error talking to Kubevirt. The error message is shown
@@ -41,8 +47,6 @@ en:
         Unable to start VM: %{message}
       stop_vm_error: |-
         Unable to stop VM: %{message}
-      vm_exists: |-
-        The VM is already created
       vm_ready_timeout: |-
         The VM never became "ready" in AWS. The timeout currently
         set waiting for the vm to become ready is %{timeout} seconds.

@@ -15,11 +15,7 @@ module VagrantPlugins
           # Check if the domain name is not already taken
           kubevirt = env[:kubevirt_compute]
           begin
-            domain = kubevirt.vms.get(env[:domain_name])
-
-            unless domain.nil?
-              raise Errors::DomainNameExists, :domain_name => env[:domain_name]
-            end
+            kubevirt.vms.get(env[:domain_name])
           rescue Fog::Kubevirt::Errors::ClientError => e
             msg = e.message
 

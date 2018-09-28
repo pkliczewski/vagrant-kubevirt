@@ -14,19 +14,24 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use ConnectKubevirt
           b.use Call, IsCreated do |env1, b1|
+          	b1.use SetDomainName
+
             if env1[:result]
               b1.use Message,
                 I18n.t("vagrant_kubevirt.already_status", :status => "created")
-              next
+            else
+              b1.use CreateVM
             end
 
-            b1.use SetDomainName
-            b1.use CreateVM
-            b1.use StartVM
-            b1.use Call, WaitForState, :running, 120 do |env2, b2|
-              if !env2[:result]
-                b2.use Message,
-                  I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
+            b1.use Call, IsStopped do |env2, b2|
+              if env2[:result]
+                b2.use StartVM
+                b2.use Call, WaitForState, :running, 120 do |env3, b3|
+                  if !env3[:result]
+                    b3.use Message,
+                      I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
+                  end
+                end
               end
             end
           end
@@ -45,6 +50,7 @@ module VagrantPlugins
             end
 
             b2.use ConnectKubevirt
+            b2.use SetDomainName
             b2.use StopVM
             b2.use Call, WaitForState, :stopped, 120 do |env2, b3|
               if !env2[:result]
@@ -90,6 +96,7 @@ module VagrantPlugins
       autoload :CreateVM, action_root.join("create_vm")
       autoload :DestroyVM, action_root.join("destroy_vm")
       autoload :IsCreated, action_root.join("is_created")
+      autoload :IsStopped, action_root.join("is_stopped")
       autoload :ReadState, action_root.join("read_state")
       autoload :ReadSSHInfo, action_root.join("read_ssh_info")
       autoload :SetDomainName, action_root.join("set_domain_name")
