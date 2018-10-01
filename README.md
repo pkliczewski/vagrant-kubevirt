@@ -7,7 +7,15 @@ provider to Vagrant, allowing Vagrant to control and provision virtual machines 
 **NOTE:** This plugin requires Vagrant 1.2+,
 
 ## Features
-* In progress
+* Vagrant `up`, `halt`, `status` and `destroy` commands.
+* Create and boot virtual machines using templates, registry image or pvc.
+
+## Future work
+* Provision the virtual machines with any built-in Vagrant provisioner.
+* Synced folder support
+* Package running virtual machines into new vagrant-kubevirt friendly boxes
+* SSH into the VMIs
+
 
 ## Usage
 
@@ -24,7 +32,38 @@ $ vagrant up --provider=kubevirt
 
 ## Quick Start
 
+After installing the plugin (instructions above), the quickest way to get
+started is to actually use a Kubevirt box and specify all the details
+manually within a `config.vm.provider` block. So first, add the box using
+any name you want:
+
+```
+$ vagrant box add kubevirt https://raw.githubusercontent.com/pkliczewski/vagrant-kubevirt/master/example_box/kubevirt.box
 ...
+```
+
+And then make a Vagrantfile that looks like the following, filling in
+your information where necessary.
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = 'kubevirt'
+
+  config.vm.provider :kubevirt do |kubevirt|
+    # kubevirt.template = 'working'
+    kubevirt.cpus = 2
+    kubevirt.memory = 512
+    kubevirt.image = 'registry:5000/kubevirt/fedora-cloud-registry-disk-demo:devel'
+    # kubevirt.pvc = 'my_pvc'
+
+    kubevirt.hostname = '<kubevirt-host>'
+    kubevirt.port = '<kubevirt port>'
+    kubevirt.token = '<token>'
+  end
+end
+```
+
+And then run `vagrant up --provider=kubevirt`.
 
 ## Box Format
 
@@ -39,4 +78,16 @@ provider-specific configuration for this provider.
 
 ## Configuration
 
-...
+This provider exposes following provider-specific configuration options:
+
+* `hostname` - Hostname where Kubevirt is deployed
+* `port` - Port on which Kubevirt is listening
+* `token` - Token used to authenticate any requests
+
+### Domain Specific Options
+
+* `cpus` - Number of virtual cpus. Defaults to 1 if not set.
+* `memory` - Amount of memory in MBytes. Defaults to 512 if not set.
+* `template` -  Name of template from which new VM will be created.
+* `image` - Name of image which will be used to create new VM.
+* `pvc` - Name of persistent volume claim which will be used to create new VM.

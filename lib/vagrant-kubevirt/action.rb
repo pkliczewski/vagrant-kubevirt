@@ -22,15 +22,15 @@ module VagrantPlugins
             else
               b1.use CreateVM
             end
+          end
 
-            b1.use Call, IsStopped do |env2, b2|
-              if env2[:result]
-                b2.use StartVM
-                b2.use Call, WaitForState, :running, 120 do |env3, b3|
-                  if !env3[:result]
-                    b3.use Message,
-                      I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
-                  end
+          b.use Call, IsStopped do |env2, b2|
+            if env2[:result]
+              b2.use StartVM
+              b2.use Call, WaitForState, :running, 120 do |env3, b3|
+                if !env3[:result]
+                  b3.use Message,
+                    I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
                 end
               end
             end

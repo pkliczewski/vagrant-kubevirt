@@ -7,9 +7,7 @@ Vagrant.configure("2") do |config|
     kubevirt.memory = 512
     kubevirt.image = 'registry:5000/kubevirt/fedora-cloud-registry-disk-demo:devel'
     # kubevirt.pvc = 'my_pvc'
-  end
 
-  config.vm.provider :kubevirt do |kubevirt|
     kubevirt.hostname = '127.0.0.1'
     kubevirt.port = '32809'
     kubevirt.token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJldmlydC10ZXN0aW5nLXRva2VuLWMyd3Z6Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6Imt1YmV2aXJ0LXRlc3RpbmciLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1YzViZDY4ZC1jMDA3LTExZTgtOTBkOC01MjU1MDBkMTU1MDEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06a3ViZXZpcnQtdGVzdGluZyJ9.G7lL487O1fUW_aBkZZhSF5KhJcgocs2hc39q_0Xi2o5tzchO7KN_lLRmgF9qcCb4YtO8KkDCfx5dKH5qYjC0ks-IrxfNhboxaa_heTdKJSLouek10-RjZcJdUenv40w0xtI7EZbafcp2XiMwN7-4lJkt-LikxXvwaxWo5LfsmF0hRSbhiYb87BSgPBvqsnc70Adxme_dcmtqz3W-Gq8TC5BsOcUwtTG8UxrnvKr2XDwq8ohs0DiRvm-w_UhuriS_n6EuVxEINciNOi1Ck27XEfgtI3AZC2jlO7SJOZ8djNtvOB_K9u0yE4Qg5IFeNzCu7HXgmiPs-CP7p5CRAOsoog'
