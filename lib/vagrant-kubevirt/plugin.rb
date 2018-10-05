@@ -11,7 +11,7 @@ if Vagrant::VERSION < "1.2.0"
 end
 
 module VagrantPlugins
-  module Kubevir
+  module Kubevirt
     class Plugin < Vagrant.plugin('2')
       name "Kubevirt"
       description <<-DESC

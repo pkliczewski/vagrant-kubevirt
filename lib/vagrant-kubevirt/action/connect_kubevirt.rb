@@ -19,7 +19,6 @@ module VagrantPlugins
 
           # Build the fog config
           fog_config = {
-            :provider           => 'kubevirt',
             :kubevirt_hostname  => config.hostname,
             :kubevirt_port      => config.port,
             :kubevirt_token     => config.token,
@@ -28,7 +27,7 @@ module VagrantPlugins
           }
 
           @logger.info("Connecting to Kubevirt...")
-          env[:kubevirt_compute] = Fog::Compute.new(fog_config)
+          env[:kubevirt_compute] = Fog::Kubevirt::Compute.new(fog_config)
 
           @app.call(env)
         end
