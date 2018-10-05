@@ -27,9 +27,9 @@ module VagrantPlugins
           vm = kubevirt.vms.get(vm_name)
 
           if vm.status == @state
-            @logger.info(I18n.t("vagrant_kubevirt.already_status", :status => @state))
+            env[:ui].info(I18n.t("vagrant_kubevirt.already_status", :status => @state))
           else
-            @logger.info(I18n.t("vagrant_kubevirt.wait_for_state", :state => @state))
+            env[:ui].info(I18n.t("vagrant_kubevirt.wait_for_state", :state => @state))
             begin
               Timeout.timeout(@timeout) do
                 watch.each do |notice|

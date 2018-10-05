@@ -26,8 +26,7 @@ module VagrantPlugins
               vm.stop
             end
           rescue Fog::Errors::Error => e
-            raise Errors::StopVMError,
-              :error_message => e.message
+            raise Errors::StopVMError, :message => e.message
           end
 
           @app.call(env)

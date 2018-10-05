@@ -20,13 +20,11 @@ module VagrantPlugins
           begin
             vm = kubevirt.vms.get(env[:machine].id.to_s)
             if vm == nil
-              raise Errors::NoVMError,
-                :vm_name => env[:domain_name]
+              raise Errors::NoVMError, :vm_name => env[:domain_name]
             end
             vm.start
           rescue Fog::Errors::Error => e
-            raise Errors::StartVMError,
-              :error_message => e.message
+            raise Errors::StartVMError, :message => e.message
           end
 
           @app.call(env)
