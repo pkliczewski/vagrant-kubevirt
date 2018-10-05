@@ -21,6 +21,12 @@ en:
     vm_exists: |-
       The VM is already created
 
+    config:
+      kubevirt_info_required: |-
+        One or more of the needed Kubevirt connection details are missing.
+      image_info_required: |-
+        Either template, pvc or image details are required.
+
     states:
       short_not_created: |-
         not created
@@ -35,6 +41,7 @@ en:
         stopped
       long_stopped: |-
         The virtual machine is stopped. Run `vagrant up` to start it.
+
     errors:
       fog_error: |-
         There was an error talking to Kubevirt. The error message is shown

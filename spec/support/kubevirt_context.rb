@@ -9,5 +9,7 @@ shared_context 'kubevirt' do
   before (:each) do
     stub_const('Fog::Kubevirt::Compute', compute)
     allow(compute).to receive(:new).with(hash_including(:kubevirt_hostname, :kubevirt_port, :kubevirt_token, :kubevirt_namespace, :kubevirt_log))
+
+    allow(machine).to receive(id).and_return(id)
   end
 end

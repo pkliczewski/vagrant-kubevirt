@@ -11,6 +11,7 @@ shared_context 'unit' do
 
       config.vm.provider :kubevirt do |kubevirt|
         kubevirt.token = 'abc'
+        kubevirt.template = 'working'
       end
     end
     EOF

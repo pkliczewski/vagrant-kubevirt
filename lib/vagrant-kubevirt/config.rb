@@ -44,7 +44,14 @@ module VagrantPlugins
       end
 
       def validate(machine)
-      	# TODO
+        errors = _detected_errors
+
+        config = machine.provider_config
+        errors << I18n.t("vagrant_kubevirt.config.kubevirt_info_required") if config.hostname.nil?  or config.port.nil? or config.namespace.nil? or config.token.nil?
+
+        errors << I18n.t("vagrant_kubevirt.config.image_info_required") if config.template.nil?  and config.image.nil? and config.pvc.nil?
+
+        { 'Kubevirt Provider' => errors }
       end
     end
   end
