@@ -40,7 +40,7 @@ describe VagrantPlugins::Kubevirt::Action::StopVM do
       allow(vms).to receive(:get).and_return(vm)
       allow(vm).to receive(:status).and_return(:stopped)
       expect(vm).not_to receive(:stop)
-      expect(ui).to receive(:info).with('The VM is already not_created.')
+      expect(ui).to receive(:info).with('The VM is already stopped.')
 
       expect(subject.call(env)).to be_nil
     end

@@ -18,6 +18,7 @@ module VagrantPlugins
         def call(env)
           # Get config.
           config = env[:machine].provider_config
+
           vm_name = env[:domain_name]
           namespace = config.namespace
           cpus = config.cpus
@@ -28,7 +29,7 @@ module VagrantPlugins
           template = config.template
 
           # Output the settings we're going to use to the user
-          env[:ui].info(I18n.t("vagrant_ovirt.creating_vm"))
+          env[:ui].info(I18n.t("vagrant_kubevirt.creating_vm"))
           env[:ui].info(" -- Name:          #{vm_name}")
           env[:ui].info(" -- Namespace:     #{namespace}")
           env[:ui].info(" -- Cpus:          #{cpus}")

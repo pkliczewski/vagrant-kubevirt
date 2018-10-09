@@ -1,5 +1,7 @@
 en:
   vagrant_kubevirt:
+    creating_vm: |-
+      Creating VM with the following settings...
     already_status: |-
       The VM is already %{status}.
     error_recovering: |-

@@ -21,7 +21,7 @@ shared_context 'unit' do
     test_env.vagrantfile vagrantfile
     test_env
   end
-  let(:env)              { { env: iso_env, machine: machine, ui: ui, root_path: '/rootpath',  kubevirt_compute: compute} }
+  let(:env)              { { env: iso_env, machine: machine, ui: ui, root_path: '/rootpath',  kubevirt_compute: compute, domain_name: 'Test', action_runner: runner} }
   let(:conf)             { Vagrant::Config::V2::DummyConfig.new }
   let(:ui)               { Vagrant::UI::Basic.new }
   let(:iso_env)          { test_env.create_vagrant_env ui_class: Vagrant::UI::Basic }
@@ -29,4 +29,5 @@ shared_context 'unit' do
   let(:app)              { ->(env) {} }
   let(:plugin)           { register_plugin }
   let(:compute)          { double('compute') }
+  let(:runner)           { double('runner') }
 end

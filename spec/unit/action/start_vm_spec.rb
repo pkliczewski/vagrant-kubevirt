@@ -1,6 +1,3 @@
-require 'fog/kubevirt'
-
-require 'spec_helper'
 require 'support/sharedcontext'
 require 'support/kubevirt_context'
 
