@@ -34,7 +34,7 @@ describe VagrantPlugins::Kubevirt::Action::ReadState do
     end
 
     it 'checks when a vm not found' do
-      allow(vms).to receive(:get).and_return(nil)
+      allow(vms).to receive(:get).and_raise(Fog::Kubevirt::Errors::ClientError, "404")
 
       expect(subject.call(env)).to be_nil
 

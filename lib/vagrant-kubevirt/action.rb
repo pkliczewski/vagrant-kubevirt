@@ -90,6 +90,49 @@ module VagrantPlugins
         end
       end
 
+      # This action is called to read the SSH info of the machine. The
+      # resulting state is expected to be put into the `:machine_ssh_info`
+      # key.
+      def self.action_read_ssh_info
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ConfigValidate
+          b.use ConnectKubevirt
+          b.use ReadSSHInfo
+        end
+      end
+
+
+      # This action is called to SSH into the machine.
+      def self.action_ssh
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ConfigValidate
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.not_created")
+              next
+            end
+
+            b2.use SSHExec
+          end
+        end
+      end
+
+      def self.action_ssh_run
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ConfigValidate
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.not_created")
+              next
+            end
+
+            b2.use SSHRun
+          end
+        end
+      end
+
       # The autoload farm
       action_root = Pathname.new(File.expand_path("../action", __FILE__))
       autoload :ConnectKubevirt, action_root.join("connect_kubevirt")

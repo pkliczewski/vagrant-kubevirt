@@ -19,13 +19,20 @@ module VagrantPlugins
         def read_state(kubevirt, machine)
           return :not_created if machine.id.nil?
 
-          # Find the machine
-          vm = kubevirt.vms.get(machine.id)
-          if vm.nil?
-            # The machine can't be found
-            @logger.info(I18n.t("vagrant_kubevirt.vm_not_found"))
-            machine.id = nil
-            return :not_created
+          begin
+            # Find the machine
+            vm = kubevirt.vms.get(machine.id)
+          rescue Fog::Kubevirt::Errors::ClientError => e
+            msg = e.message
+
+            unless msg.include? '404'
+              raise Errors::FogError, :message => msg
+            else
+              # The machine can't be found
+              @logger.info(I18n.t("vagrant_kubevirt.vm_not_found"))
+              machine.id = nil
+              return :not_created
+            end
           end
 
           # Return the state

@@ -18,6 +18,7 @@ module VagrantPlugins
           if vm != nil
             config = env[:machine].provider_config
             kubevirt.vminstances.destroy(vm.name, config.namespace)
+            kubevirt.services.delete("#{vm.name}-ssh")
           end
           env[:machine].id = nil
 

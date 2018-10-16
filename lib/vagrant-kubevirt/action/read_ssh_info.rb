@@ -20,8 +20,10 @@ module VagrantPlugins
         def read_ssh_info(kubevirt, machine)
           return nil if machine.id.nil?
 
+          vmi_name = machine.id
+
           # Find the machine
-          vmi = kubevirt.vminstances.get(machine.id)
+          vmi = kubevirt.vminstances.get(vmi_name)
           if vmi.nil?
             # The machine can't be found
             @logger.info(I18n.t("vagrant_kubevirt.vm_not_found"))
@@ -29,7 +31,17 @@ module VagrantPlugins
             return nil
           end
 
-          return { :host => vmi.ip_address, :port => 22 }
+          node_name = vmi.node_name
+          if node_name.nil?
+            raise Errors::NoNodeError
+          end
+  
+          service = kubevirt.services.get("#{vmi_name}-ssh")
+          if service.nil?
+            raise Errors::NoServiceError, :name => vmi_name
+          end
+
+          return { :host => vmi.node_name, :port => service.node_port }
         end
       end
     end

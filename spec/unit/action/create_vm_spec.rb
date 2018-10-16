@@ -9,12 +9,16 @@ describe VagrantPlugins::Kubevirt::Action::CreateVM do
   include_context 'unit'
   include_context 'kubevirt'
 
+  let(:services) { double('service') }
   let(:vms) { double('vms') }
   let(:vm) { double('vm') }
 
   describe '#call' do
     before do
       allow(compute).to receive(:vms).and_return(vms)
+      allow(compute).to receive(:services).and_return(services)
+      allow(services).to receive(:create)
+
       allow(vms).to receive(:get).and_return(vm)
       allow(vm).to receive(:name).and_return('Test')
 

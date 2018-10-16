@@ -26,6 +26,14 @@ module VagrantPlugins
       class VMReadyTimeout < VagrantKubevirtError
         error_key(:vm_ready_timeout)
       end
+
+      class NoNodeError < VagrantKubevirtError
+        error_key(:no_node_error)
+      end
+
+      class NoServiceError < VagrantKubevirtError
+        error_key(:no_service_error)
+      end
     end
   end
 end

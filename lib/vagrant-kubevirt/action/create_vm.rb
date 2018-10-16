@@ -25,6 +25,7 @@ module VagrantPlugins
           memory_size = config.memory
           image = config.image
           pvc = config.pvc
+          port_node = config.port_node
 
           template = config.template
 
@@ -38,11 +39,13 @@ module VagrantPlugins
           kubevirt = env[:kubevirt_compute]
 
           if template == nil
-          	provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
+            provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
           else
-          	env[:ui].info(" -- Template:      #{template}")
-          	provision_from_template(kubevirt, template, vm_name, cpus, memory_size)
+            env[:ui].info(" -- Template:      #{template}")
+            provision_from_template(kubevirt, template, vm_name, cpus, memory_size)
           end
+
+          create_service(kubevirt, vm_name, port_node)
 
           vm = kubevirt.vms.get(vm_name)
           env[:machine].id = vm.name
@@ -57,28 +60,36 @@ module VagrantPlugins
           return if env["vagrant.error"].is_a?(Vagrant::Errors::VagrantError)
 
           if env[:machine].provider.state.id != :not_created
-          	env[:ui].info(I18n.t("vagrant_kubevirt.error_recovering"))
-          	terminate(env)
+            env[:ui].info(I18n.t("vagrant_kubevirt.error_recovering"))
+            terminate(env)
           end
         end
 
         private
 
         def provision_from_template(kubevirt, template, vm_name, cpus, memory_size)
-        	begin
-        	  temp = kubevirt.templates.get(template)
-        	  temp.clone(name: vm_name, memory: memory_size, cpu_cores: cpus)
-        	rescue Fog::Errors::Error => e
-        	  raise Errors::FogError, :message => e.message
-        	end
+          begin
+            temp = kubevirt.templates.get(template)
+            temp.clone(name: vm_name, memory: memory_size, cpu_cores: cpus)
+          rescue Fog::Errors::Error => e
+            raise Errors::FogError, :message => e.message
+          end
         end
 
         def provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
-        	begin
-        	  kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc)
-        	rescue Fog::Errors::Error => e
-        	  raise Errors::FogError, :message => e.message
-        	end
+          begin
+            kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc)
+          rescue Fog::Errors::Error => e
+            raise Errors::FogError, :message => e.message
+          end
+        end
+
+        def create_service(kubevirt, vm_name, port_node)
+          begin
+            kubevirt.services.create(port: port_node, name: "#{vm_name}-ssh", target_port: 22, vmi_name: vm_name, service_type: "NodePort")
+          rescue Fog::Errors::Error => e
+            raise Errors::FogError, :message => e.message
+          end
         end
 
         def terminate(env)

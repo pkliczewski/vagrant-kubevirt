@@ -9,12 +9,15 @@ describe VagrantPlugins::Kubevirt::Action::DestroyVM do
   include_context 'unit'
   include_context 'kubevirt'
 
+  let(:services) { double('service') }
   let(:vminstances) { double('vminstances') }
   let(:vmi) { double('vmi') }
 
   describe '#call' do
     before do
       allow(compute).to receive(:vminstances).and_return(vminstances)
+      allow(compute).to receive(:services).and_return(services)
+      allow(services).to receive(:delete)
       allow(vminstances).to receive(:get).and_return(vmi)
       allow(vmi).to receive(:name).and_return('test')
 

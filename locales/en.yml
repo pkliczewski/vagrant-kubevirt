@@ -59,3 +59,7 @@ en:
       vm_ready_timeout: |-
         The VM never became "ready" in AWS. The timeout currently
         set waiting for the vm to become ready is %{timeout} seconds.
+      no_node_error: |-
+        The VM is not running on a node.
+      no_service_error: |-
+        No service configured for VM: %{name}

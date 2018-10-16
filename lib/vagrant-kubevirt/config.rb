@@ -16,6 +16,7 @@ module VagrantPlugins
       attr_accessor :template
       attr_accessor :image
       attr_accessor :pvc
+      attr_accessor :port_node
 
       def initialize
       	@token     = UNSET_VALUE
@@ -23,11 +24,12 @@ module VagrantPlugins
         @port      = UNSET_VALUE
         @namespace = UNSET_VALUE
 
-        @memory   = UNSET_VALUE
-        @cpus     = UNSET_VALUE
-        @template = UNSET_VALUE
-        @image    = UNSET_VALUE
-        @pvc      = UNSET_VALUE
+        @memory    = UNSET_VALUE
+        @cpus      = UNSET_VALUE
+        @template  = UNSET_VALUE
+        @image     = UNSET_VALUE
+        @pvc       = UNSET_VALUE
+        @port_node = UNSET_VALUE
       end
 
       def finalize!
@@ -41,6 +43,7 @@ module VagrantPlugins
         @template = nil if @template == UNSET_VALUE
         @image = nil if @image == UNSET_VALUE
         @pvc = nil if @pvc == UNSET_VALUE
+        @port_node = 30000 if @port_node == UNSET_VALUE
       end
 
       def validate(machine)
