@@ -18,6 +18,7 @@ module VagrantPlugins
         def call(env)
           # Get config.
           config = env[:machine].provider_config
+          ssh_info = env[:machine].config.ssh
 
           vm_name = env[:domain_name]
           namespace = config.namespace
@@ -26,7 +27,7 @@ module VagrantPlugins
           image = config.image
           pvc = config.pvc
           port_node = config.port_node
-
+ 
           template = config.template
 
           # Output the settings we're going to use to the user
@@ -39,7 +40,7 @@ module VagrantPlugins
           kubevirt = env[:kubevirt_compute]
 
           if template == nil
-            provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
+            provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc, ssh_info)
           else
             env[:ui].info(" -- Template:      #{template}")
             provision_from_template(kubevirt, template, vm_name, cpus, memory_size)
@@ -76,9 +77,23 @@ module VagrantPlugins
           end
         end
 
-        def provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc)
+        def provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc, ssh_info)
           begin
-            kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc)
+            init = {}
+            userData = ""
+
+            unless ssh_info.username.nil?
+              userData.concat("user: #{ssh_info.username}\n")
+            end
+            unless  ssh_info.password.nil?
+              userData.concat("password: #{ssh_info.password}\n")
+            end
+
+            unless userData.empty?
+              init = {:userData => "#cloud-config\n#{userData}chpasswd: { expire: False }"}
+            end
+
+            kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc, cloudinit: init)
           rescue Fog::Errors::Error => e
             raise Errors::FogError, :message => e.message
           end
