@@ -33,7 +33,8 @@ module VagrantPlugins
 
           node_name = vmi.node_name
           if node_name.nil?
-            raise Errors::NoNodeError
+            @logger.info(I18n.t("vagrant_kubevirt.not_running"))
+            return nil
           end
   
           service = kubevirt.services.get("#{vmi_name}-ssh")
@@ -41,7 +42,11 @@ module VagrantPlugins
             raise Errors::NoServiceError, :name => vmi_name
           end
 
-          return { :host => vmi.node_name, :port => service.node_port }
+          info = { :host => vmi.node_name, :port => service.node_port }
+          key_path = machine.config.ssh.private_key_path
+          info[:private_key_path] = key_path unless key_path.nil? || key_path.empty?
+
+          return info
         end
       end
     end
