@@ -9,13 +9,13 @@ provider to Vagrant, allowing Vagrant to control and provision virtual machines 
 ## Features
 * Vagrant `up`, `halt`, `status` and `destroy` commands.
 * Create and boot virtual machines using templates, registry image or pvc.
-
-## Future work
 * Provision the virtual machines with any built-in Vagrant provisioner.
-* Synced folder support
-* Package running virtual machines into new vagrant-kubevirt friendly boxes
 * SSH into the VMIs
 
+## Future work
+* Synced folder support
+* Package running virtual machines into new vagrant-kubevirt friendly boxes
+* Manage networks for virtual machines
 
 ## Usage
 
@@ -48,18 +48,27 @@ your information where necessary.
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = 'kubevirt'
+  config.vm.boot_timeout = 30
+
+  config.vm.provision "shell" do |s|
+    s.inline = "touch example.txt"
+  end
 
   config.vm.provider :kubevirt do |kubevirt|
     # kubevirt.template = 'working'
     kubevirt.cpus = 2
     kubevirt.memory = 512
-    kubevirt.image = 'registry:5000/kubevirt/fedora-cloud-registry-disk-demo:devel'
+    kubevirt.image = 'kubevirt/fedora-cloud-registry-disk-demo'
     # kubevirt.pvc = 'my_pvc'
 
-    kubevirt.hostname = '<kubevirt-host>'
-    kubevirt.port = '<kubevirt port>'
-    kubevirt.token = '<token>'
+    # kubevirt.hostname = '<kubevirt-host>'
+    # kubevirt.port = '<kubevirt port>'
+    # kubevirt.token = '<token>'
   end
+
+  config.ssh.username = 'vagrant'
+  config.ssh.password = 'vagrant'
+  config.ssh.private_key_path = ['~/.ssh/id_rsa']
 end
 ```
 
@@ -78,11 +87,18 @@ provider-specific configuration for this provider.
 
 ## Configuration
 
-This provider exposes following provider-specific configuration options:
+There are 2 options to configure provider:
+
+# Kubevirt provider configuration options:
 
 * `hostname` - Hostname where Kubevirt is deployed
 * `port` - Port on which Kubevirt is listening
 * `token` - Token used to authenticate any requests
+
+# kubeconfig file
+
+User can provide path to config file using `KUBECONFIG` environemnt variable or have it in
+well known location such as `~/.kube/config`.
 
 ### Domain Specific Options
 
