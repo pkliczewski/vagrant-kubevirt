@@ -22,18 +22,26 @@ module VagrantPlugins
           vm_name = env[:domain_name]
           kubevirt = env[:kubevirt_compute]
 
-          watch = kubevirt.watch_vms
+
+          if @state.to_s == 'running'
+            watch = kubevirt.watch_vminstances
+            kind = 'VirtualMachineInstance'
+            env[:ui].info(I18n.t("vagrant_kubevirt.wait_for_boot"))
+          else
+            watch = kubevirt.watch_vms
+            kind = 'VirtualMachine'
+            env[:ui].info(I18n.t("vagrant_kubevirt.wait_for_state", :state => @state))
+          end
 
           vm = kubevirt.vms.get(vm_name)
 
           if vm.status == @state
             env[:ui].info(I18n.t("vagrant_kubevirt.already_status", :status => @state))
           else
-            env[:ui].info(I18n.t("vagrant_kubevirt.wait_for_state", :state => @state))
             begin
               Timeout.timeout(@timeout) do
                 watch.each do |notice|
-                  break if notice.kind == 'VirtualMachine' && notice.name == vm_name && notice.status == @state.to_s
+                  break if notice.kind == kind && notice.name == vm_name && !notice.status.nil? && notice.status.downcase == @state.to_s
                 end
               end
             rescue Timeout::Error
@@ -41,6 +49,14 @@ module VagrantPlugins
             end
           end
           watch.finish
+
+          if @state.to_s == 'running'
+            wait = env[:machine].config.vm.boot_timeout || 0
+            10.times do
+              machine.communicate.wait_for_ready(wait)
+              break if machine.communicate.ready?
+            end
+          end
 
           @app.call(env)
         end

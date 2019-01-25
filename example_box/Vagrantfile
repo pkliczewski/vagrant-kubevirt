@@ -1,5 +1,10 @@
 Vagrant.configure("2") do |config|
   config.vm.box = 'kubevirt'
+  config.vm.boot_timeout = 30
+
+  config.vm.provision "shell" do |s|
+    s.inline = "touch example.txt"
+  end
 
   config.vm.provider :kubevirt do |kubevirt|
     # kubevirt.template = 'working'
@@ -8,8 +13,12 @@ Vagrant.configure("2") do |config|
     kubevirt.image = 'kubevirt/fedora-cloud-registry-disk-demo'
     # kubevirt.pvc = 'my_pvc'
 
-    kubevirt.hostname = '192.168.122.51'
-    kubevirt.port = '8443'
-    kubevirt.token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJldmlydC1wcml2aWxlZ2VkLXRva2VuLW1xN252Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6Imt1YmV2aXJ0LXByaXZpbGVnZWQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJjNGQyODA4MS1jZDNlLTExZTgtOGYzYy1hYzAxYzZkMzhmZWIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06a3ViZXZpcnQtcHJpdmlsZWdlZCJ9.BUBWJi9a_A_rOrsiil7wEqxxdDOtpYt9M42HHdQr0JQ5Y2ES5xI2yecpdXPypfX4wa-8blj7xJyU3EZCSTUUX2Z-KXoYieYr6sKB-umYiK4MR4eSiBFL8J0QP_2zxZleUOAuAT8JZCHh7JbccUM0ebOtNPBCVDPb_j-zSsuSISBtayGzTzo7RgkyyO_2NfyYBv1b3gxlznGsWuqw6Kw01OE5Xs7EIDAbGn6Z51NUU3fE_UGZg5588z_WurEV_tJhfDGBIuIsWaJHHTmwnQ6kll4nWaqV5r3NlrSmk_z5m14rlmDRf2G-oTMkFlHgDjTbkZeUF8G0TT4FShQzrWSFhA'
+    # kubevirt.hostname = '192.168.122.51'
+    # kubevirt.port = '8443'
+    # kubevirt.token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJldmlydC1wcml2aWxlZ2VkLXRva2VuLW1xN252Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6Imt1YmV2aXJ0LXByaXZpbGVnZWQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJjNGQyODA4MS1jZDNlLTExZTgtOGYzYy1hYzAxYzZkMzhmZWIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06a3ViZXZpcnQtcHJpdmlsZWdlZCJ9.BUBWJi9a_A_rOrsiil7wEqxxdDOtpYt9M42HHdQr0JQ5Y2ES5xI2yecpdXPypfX4wa-8blj7xJyU3EZCSTUUX2Z-KXoYieYr6sKB-umYiK4MR4eSiBFL8J0QP_2zxZleUOAuAT8JZCHh7JbccUM0ebOtNPBCVDPb_j-zSsuSISBtayGzTzo7RgkyyO_2NfyYBv1b3gxlznGsWuqw6Kw01OE5Xs7EIDAbGn6Z51NUU3fE_UGZg5588z_WurEV_tJhfDGBIuIsWaJHHTmwnQ6kll4nWaqV5r3NlrSmk_z5m14rlmDRf2G-oTMkFlHgDjTbkZeUF8G0TT4FShQzrWSFhA'
   end
+
+  config.ssh.username = 'vagrant'
+  config.ssh.password = 'vagrant'
+  config.ssh.private_key_path = ['~/.ssh/id_rsa']
 end

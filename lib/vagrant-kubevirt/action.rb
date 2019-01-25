@@ -24,11 +24,13 @@ module VagrantPlugins
             end
           end
 
+          b.use Provision
+
           b.use Call, IsStopped do |env2, b2|
             if env2[:result]
               b2.use StartVM
               b2.use Call, WaitForState, :running, 120 do |env3, b3|
-                if !env3[:result]
+                unless env3[:result]
                   b3.use Message,
                     I18n.t("vagrant_kubevirt.action_failed", :action => 'Up')
                 end
@@ -43,7 +45,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use Message,
                 I18n.t("vagrant_kubevirt.not_created")
               next
@@ -53,7 +55,7 @@ module VagrantPlugins
             b2.use SetDomainName
             b2.use StopVM
             b2.use Call, WaitForState, :stopped, 120 do |env2, b3|
-              if !env2[:result]
+              unless env2[:result]
                 b2.use Message,
                   I18n.t("vagrant_kubevirt.action_failed", :action => 'Halt')
               end
@@ -67,7 +69,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use Message,
                 I18n.t("vagrant_kubevirt.not_created")
               next
@@ -107,7 +109,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use Message,
                 I18n.t("vagrant_kubevirt.not_created")
               next
@@ -122,13 +124,35 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use Message,
                 I18n.t("vagrant_kubevirt.not_created")
               next
             end
 
             b2.use SSHRun
+          end
+        end
+      end
+
+      def self.action_provision
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use ConfigValidate
+          b.use Call, IsCreated do |env, b2|
+            unless env[:result]
+              b2.use Message,
+                I18n.t("vagrant_kubevirt.not_created")
+              next
+            end
+
+            b2.use Call, IsStopped do |env2, b3|
+              if env2[:result]
+                I18n.t("vagrant_kubevirt.not_running")
+                next
+              end
+
+              b3.use Provision
+            end
           end
         end
       end
