@@ -25,6 +25,7 @@ module VagrantPlugins
           end
 
           b.use Provision
+          b.use SyncedFolders
 
           b.use Call, IsStopped do |env2, b2|
             if env2[:result]

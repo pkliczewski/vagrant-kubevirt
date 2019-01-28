@@ -21,7 +21,7 @@ shared_context 'unit' do
     test_env.vagrantfile vagrantfile
     test_env
   end
-  let(:env)              { { env: iso_env, machine: machine, ui: ui, root_path: '/rootpath',  kubevirt_compute: compute, domain_name: 'Test', action_runner: runner} }
+  let(:env)              { { env: iso_env, machine: machine, ui: ui, root_path: File.expand_path(File.dirname(__FILE__)),  kubevirt_compute: compute, domain_name: 'Test', action_runner: runner} }
   let(:conf)             { Vagrant::Config::V2::DummyConfig.new }
   let(:ui)               { Vagrant::UI::Basic.new }
   let(:iso_env)          { test_env.create_vagrant_env ui_class: Vagrant::UI::Basic }

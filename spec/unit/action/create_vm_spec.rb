@@ -96,5 +96,27 @@ describe VagrantPlugins::Kubevirt::Action::CreateVM do
         expect(subject.call(env)).to be_nil
       end
     end
+
+    context 'with folders synchronized' do
+      let(:vagrantfile) do
+        <<-EOF
+        Vagrant.configure('2') do |config|
+          config.vm.box = 'kubevirt'
+          config.vm.define :test
+          config.vm.synced_folder "", "/srv/website"
+          config.vm.provider :kubevirt do |kubevirt|
+            kubevirt.token = 'abc'
+            kubevirt.image = 'kubevirt/fedora'
+          end
+        end
+        EOF
+      end
+
+      it 'creates a vm with folder defined' do
+        expect(vms).to receive(:create).with(hash_including(:vm_name => "Test", :cpus => 1, :memory_size => 512, :image => 'kubevirt/fedora', :pvc => nil))
+
+        expect(subject.call(env)).to be_nil
+      end
+    end
   end
 end
