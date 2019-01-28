@@ -4,16 +4,16 @@
 This is a [Vagrant](http://www.vagrantup.com) 1.2+ plugin that adds an [KubeVirt](http://kubevirt.io)
 provider to Vagrant, allowing Vagrant to control and provision virtual machines using Kubernetes add-on.
 
-**NOTE:** This plugin requires Vagrant 1.2+,
+**NOTE:** This plugin requires Vagrant 2.2.3+. Due to the issue in net-ssh fixed [here](https://github.com/net-ssh/net-ssh/pull/641).
 
 ## Features
 * Vagrant `up`, `halt`, `status` and `destroy` commands.
 * Create and boot virtual machines using templates, registry image or pvc.
 * Provision the virtual machines with any built-in Vagrant provisioner.
 * SSH into the VMIs
+* Synced folder support
 
 ## Future work
-* Synced folder support
 * Package running virtual machines into new vagrant-kubevirt friendly boxes
 * Manage networks for virtual machines
 
