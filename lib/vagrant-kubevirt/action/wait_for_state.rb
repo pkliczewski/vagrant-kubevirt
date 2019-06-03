@@ -53,7 +53,7 @@ module VagrantPlugins
           # wait for sshd to be up
           if @state.to_s == 'running'
             wait = env[:machine].config.vm.boot_timeout
-            machine.communicate.wait_for_ready(wait)
+            env[:machine].communicate.wait_for_ready(wait)
           end
 
           @app.call(env)

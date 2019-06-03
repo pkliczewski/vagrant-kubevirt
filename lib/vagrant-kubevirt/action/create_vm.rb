@@ -40,7 +40,20 @@ module VagrantPlugins
           kubevirt = env[:kubevirt_compute]
 
           if template == nil
-            provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc, ssh_info)
+            volumes = []
+            if !image.nil?
+              volume = Fog::Kubevirt::Compute::Volume.new
+              volume.type = 'containerDisk'
+              volume.info = image
+              volumes << volume
+            end
+            if !pvc.nil?
+              volume = Fog::Kubevirt::Compute::Volume.new
+              volume.type = 'persistentVolumeClaim'
+              volume.info = pvc
+              volumes << volume
+            end
+            provision_vm(kubevirt, vm_name, cpus, memory_size, volumes, ssh_info)
           else
             env[:ui].info(" -- Template:      #{template}")
             provision_from_template(kubevirt, template, vm_name, cpus, memory_size)
@@ -77,7 +90,7 @@ module VagrantPlugins
           end
         end
 
-        def provision_vm(kubevirt, vm_name, cpus, memory_size, image, pvc, ssh_info)
+        def provision_vm(kubevirt, vm_name, cpus, memory_size, volumes, ssh_info)
           begin
             init = {}
             userData = ""
@@ -93,7 +106,7 @@ module VagrantPlugins
               init = {:userData => "#cloud-config\n#{userData}chpasswd: { expire: False }"}
             end
 
-            kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, image: image, pvc: pvc, cloudinit: init)
+            kubevirt.vms.create(vm_name: vm_name, cpus: cpus, memory_size: memory_size, volumes: volumes, cloudinit: init)
           rescue Fog::Errors::Error => e
             raise Errors::FogError, :message => e.message
           end
